@@ -1,6 +1,5 @@
 
 var fs = require('fs'),
-util = require('util'),
 files = [
 '../vendor/date.js',
 '../vendor/inflection.js',
