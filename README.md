@@ -10,7 +10,7 @@ A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing va
 - **CRUD Operations**: Create, Read, Update, Delete functionality
 - **Single Table Inheritance (STI)**: Model inheritance support
 - **Reflection**: Introspect model structure and metadata
-- **Pure JavaScript**: No jQuery required - self-contained with bundled utilities
+- **jQuery-free**: Self-contained with bundled utilities
 
 ## Installation
 
@@ -75,8 +75,8 @@ activemodel/
 
 ## Requirements
 
-- Node.js >= 14.0.0
-- Self-contained - no npm install required
+- Node.js >= 14.0.0 (for building only)
+- No runtime dependencies required
 
 ## License
 
