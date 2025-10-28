@@ -89,7 +89,7 @@ User.validateLength('name', { minimum: 2, maximum: 50 });
 User.validateLength('password', { minimum: 8 });
 
 // Format validation (email)
-User.validateFormat('email', { with: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email format' });
+User.validateFormat('email', { qualifier: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email format' });
 
 // Numericality validation
 User.validateNumericality('age', { greater_than: 18 });
@@ -223,23 +223,29 @@ var Post = ActiveModel('post', ['title', 'content']);
 
 Post.belongsTo(User);
 
-// Validate associated models
+// Validate fields on Post
 Post.validatePresence(['title', 'content']);
+
+// Validate the associated user model
 Post.validateAssociated('user');
 
+// Validate fields on User
 User.validatePresence(['name', 'email']);
 
 var post = Post.instance();
+var user = User.instance();
+
+// Set invalid user data
+user.setAttributes({ name: '', email: 'invalid' });
+post.set('user', user);
 post.setAttributes({
   title: 'My Post',
-  content: 'Post content',
-  user: { name: '', email: 'invalid' } // Invalid user
+  content: 'Post content'
 });
 
-// This will validate both Post and User
+// This will validate both Post and the associated User
 var isValid = post.valid();
-console.log('Post valid:', isValid);
-console.log('Errors:', post.errors);
+console.log('Post valid:', isValid); // false - user is invalid
 ```
 
 ### Reflection
@@ -331,12 +337,15 @@ console.log(product.valid()); // true
 // Validate each element in a collection
 var Form = ActiveModel('form', ['tags']);
 
-Form.validateEach('tags', function(field, value) {
-  if (!value || value.length < 3) {
-    this.addError(field, 'Each tag must be at least 3 characters');
-    return false;
+Form.validateEach('tags', { 
+  func: function(field, opts) {
+    var value = this.get(field);
+    if (!value || value.length < 3) {
+      this.addError(field, 'Each tag must be at least 3 characters');
+      return false;
+    }
+    return true;
   }
-  return true;
 });
 
 var form = Form.instance();
@@ -420,7 +429,7 @@ Order.addProperty('validate', function() {
 ```javascript
 var User = ActiveModel('user', ['name', 'email']);
 User.validatePresence(['name', 'email']);
-User.validateFormat('email', { with: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ });
+User.validateFormat('email', { qualifier: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ });
 
 var user = User.instance();
 user.set('name', '');
@@ -448,11 +457,11 @@ if (!user.valid()) {
 | `validateConfirmation` | Validates field matches confirmation field | - |
 | `validateLength` | Validates string length | `minimum`, `maximum`, `is` |
 | `validateNumericality` | Validates numeric values | `greater_than`, `less_than`, `equal_to` |
-| `validateFormat` | Validates against regex pattern | `with`, `message` |
+| `validateFormat` | Validates against regex pattern | `qualifier` (regex), `message` |
 | `validateInclusion` | Value must be in list | `qualifier` (hash map), `message` |
 | `validateExclusion` | Value must NOT be in list | `qualifier` (hash map), `message` |
 | `validateAssociated` | Validates associated models | - |
-| `validateEach` | Custom validator for each element | callback function |
+| `validateEach` | Custom validator for each element | `func` (callback function) |
 
 ## Building
 
