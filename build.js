@@ -1,6 +1,6 @@
 
 var fs = require('fs'),
-sys = require('sys'),
+util = require('util'),
 files = [
 '../vendor/date.js',
 '../vendor/inflection.js',
@@ -18,17 +18,17 @@ files = [
 content = "/** RailsDocument v0.2 - Built with build.js */\n";
 
 
-sys.log('Reading files…');
+console.log('Reading files…');
 
 files.forEach(function(file){
 var path = __dirname + '/lib/' + file;
-sys.log (' + ' + path);
+console.log(' + ' + path);
 content += fs.readFileSync(path) + "\n";
 });
 
-sys.log('Generating…');
+console.log('Generating…');
 
-fs.write(fs.openSync(__dirname + '/railsDocument.js', 'w'), content, 0, 'utf8');
-sys.log(' + ' + __dirname + '/railsDocument.js');
+fs.writeFileSync(__dirname + '/railsDocument.js', content, 'utf8');
+console.log(' + ' + __dirname + '/railsDocument.js');
 
-sys.log('All done!');
+console.log('All done!');
