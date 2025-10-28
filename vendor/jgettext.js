@@ -12,8 +12,9 @@
 	};
 
 
-	var loc = normaliseLang(navigator.language /* Mozilla */
-					|| navigator.userLanguage /* IE */);
+	var loc = (typeof navigator !== 'undefined') ? 
+		normaliseLang(navigator.language /* Mozilla */ || navigator.userLanguage /* IE */) : 
+		defaultLanguage;
 	
 	
 	// var find = function(arr,terms) {
