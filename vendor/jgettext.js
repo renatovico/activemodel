@@ -1,6 +1,6 @@
-(function(jQuery,window, defaultLanguage, undefined) {
+(function(global, window, defaultLanguage, undefined) {
 
-	jQuery.lang = {};
+	var lang = {};
 
 	/* Ensure language code is in the format aa-AA. */
 	var normaliseLang = function(lang) {
@@ -12,8 +12,9 @@
 	};
 
 
-	var loc = normaliseLang(navigator.language /* Mozilla */
-					|| navigator.userLanguage /* IE */);
+	var loc = (typeof navigator !== 'undefined') ? 
+		normaliseLang(navigator.language /* Mozilla */ || navigator.userLanguage /* IE */) : 
+		defaultLanguage;
 	
 	
 	// var find = function(arr,terms) {
@@ -40,9 +41,23 @@
 
 	//todo move this to pre-process and to sqllite
 	var cache;
+	
+	function each(obj, callback) {
+		if (Array.isArray(obj)) {
+			for (var i = 0; i < obj.length; i++) {
+				if (callback.call(obj[i], i, obj[i]) === false) break;
+			}
+		} else if (obj && typeof obj === 'object') {
+			for (var key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					if (callback.call(obj[key], key, obj[key]) === false) break;
+				}
+			}
+		}
+	}
 
 	function cacherize(arr, parent) {
-	   jQuery.each(arr, function(k,v) {
+	   each(arr, function(k,v) {
 	      var k = (parent ? parent+".": '')+k;
 	      cache[k] = v;
 	      if (typeof v == "object" && !(v instanceof Array)) {
@@ -56,7 +71,7 @@
 	var getText = function(text) {
 		if (!cache) {
 			cache = {};
-			cacherize(jQuery.lang);
+			cacherize(lang);
 		}
 		
 		// var check = cache[text];
@@ -65,18 +80,44 @@
 		// 		}
 		// 		
 		// 		var sentence = text.split(".");
-		// 		cache[text] = find(jQuery.lang,sentence);
+		// 		cache[text] = find(lang,sentence);
 		
 		return cache[text];
 	};
+	
+	function tmpl(template) {
+		template = template || '';
+		var vals = (arguments.length === 2 && typeof arguments[1] === 'object' ? 
+			arguments[1] : Array.prototype.slice.call(arguments, 1));
+		
+		var regx = /#\{([^{}]*)}/g;
+		return template.replace(regx, function(str, match) {
+			return typeof vals[match] === 'string' || typeof vals[match] === 'number' ? 
+				vals[match] : str;
+		});
+	}
 
-	jQuery.getText = function(text , nuller) {
-		var searchFirst = $.tmpl('#{0}.#{1}',loc, text); 
-		var searchSecond = $.tmpl('#{0}.#{1}',defaultLanguage, text); 
+	var getTextFunc = function(text , nuller) {
+		var searchFirst = tmpl('#{0}.#{1}',loc, text); 
+		var searchSecond = tmpl('#{0}.#{1}',defaultLanguage, text); 
 		
 		return getText(searchFirst) || getText(searchSecond) || (!nuller ? searchSecond : undefined) ;
 	};
+	
+	// Export for different environments
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = {
+			getText: getTextFunc,
+			lang: lang
+		};
+	}
+	
+	// Set as global property for Utils if available
+	if (typeof global.Utils !== 'undefined') {
+		global.Utils.getText = getTextFunc;
+		global.Utils.lang = lang;
+	}
 
 
 
-})(jQuery,window , "pt-BR");
+})(typeof window !== 'undefined' ? window : (typeof global !== 'undefined' ? global : this), typeof window !== 'undefined' ? window : {}, "pt-BR");

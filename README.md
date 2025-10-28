@@ -1,6 +1,6 @@
 # ActiveModel for JavaScript
 
-A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing validation, associations, and CRUD operations.
+A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing validation, associations, and CRUD operations. **Now jQuery-free - uses only plain JavaScript!**
 
 ## Features
 
@@ -10,6 +10,7 @@ A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing va
 - **CRUD Operations**: Create, Read, Update, Delete functionality
 - **Single Table Inheritance (STI)**: Model inheritance support
 - **Reflection**: Introspect model structure and metadata
+- **jQuery-free**: Self-contained with bundled utilities
 
 ## Installation
 
@@ -20,6 +21,27 @@ cd activemodel
 
 # Build the project
 npm run build
+```
+
+## Usage
+
+```javascript
+// Define a model
+var User = ActiveModel('User', ['name', 'email', 'age']);
+
+// Create an instance
+var user = User.instance();
+
+// Set values
+user.set('name', 'John Doe');
+user.set('email', 'john@example.com');
+user.set('age', 30);
+
+// Get values
+console.log(user.get('name')); // "John Doe"
+
+// Get all values as object
+console.log(user.values()); // {name: "John Doe", email: "john@example.com", age: 30}
 ```
 
 ## Building
@@ -37,6 +59,7 @@ This generates `railsDocument.js` from the source files in the `lib/` directory.
 ```
 activemodel/
 ├── lib/              # Source files
+│   ├── utils.js      # Plain JavaScript utilities (replaces jQuery)
 │   ├── core.js       # Core functionality
 │   ├── validators.js # Validation logic
 │   ├── associations.js # Model associations
@@ -44,15 +67,16 @@ activemodel/
 │   ├── sti.js        # Single Table Inheritance
 │   ├── gettext.js    # Internationalization
 │   └── reflect.js    # Reflection API
-├── vendor/           # Third-party dependencies
+├── vendor/           # Third-party utilities (date, inflection, i18n)
 ├── spec/             # Test specifications
 ├── build.js          # Build script
-└── railsDocument.js  # Generated output file
+└── railsDocument.js  # Generated output file (gitignored)
 ```
 
 ## Requirements
 
-- Node.js >= 14.0.0
+- Node.js >= 14.0.0 (for building only)
+- No runtime dependencies required
 
 ## License
 

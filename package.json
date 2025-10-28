@@ -4,8 +4,9 @@
   "description": "ActiveModel for JavaScript - Model framework inspired by Ruby on Rails ActiveModel",
   "main": "railsDocument.js",
   "scripts": {
+    "test": "npm run build && mocha test/**/*.test.js --timeout 5000",
     "build": "node build.js",
-    "test": "echo \"Tests require legacy dependencies - see spec/node.js\" && exit 0"
+    "pretest": "npm run build"
   },
   "keywords": [
     "activemodel",
@@ -17,5 +18,9 @@
   "license": "MIT",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "mocha": "^10.8.2"
   }
 }
