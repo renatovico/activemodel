@@ -1,6 +1,6 @@
 # ActiveModel for JavaScript
 
-A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing validation, associations, and CRUD operations. **Now with zero dependencies - uses only plain JavaScript!**
+A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing validation, associations, and CRUD operations. **Now jQuery-free - uses only plain JavaScript!**
 
 ## Features
 
@@ -10,7 +10,7 @@ A JavaScript model framework inspired by Ruby on Rails ActiveModel, providing va
 - **CRUD Operations**: Create, Read, Update, Delete functionality
 - **Single Table Inheritance (STI)**: Model inheritance support
 - **Reflection**: Introspect model structure and metadata
-- **Pure JavaScript**: No external dependencies - no jQuery required!
+- **Pure JavaScript**: No jQuery required - self-contained with bundled utilities
 
 ## Installation
 
@@ -76,7 +76,7 @@ activemodel/
 ## Requirements
 
 - Node.js >= 14.0.0
-- No external runtime dependencies
+- Self-contained - no npm install required
 
 ## License
 
