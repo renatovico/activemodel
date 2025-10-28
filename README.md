@@ -483,7 +483,7 @@ activemodel/
 │   ├── gettext.js    # Internationalization
 │   └── reflect.js    # Reflection API
 ├── vendor/           # Third-party utilities (date, inflection, i18n)
-├── spec/             # Test specifications
+├── test/             # Mocha test suite
 ├── build.js          # Build script
 └── railsDocument.js  # Generated output file (gitignored)
 ```
