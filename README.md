@@ -91,8 +91,9 @@ User.validateLength('password', { minimum: 8 });
 // Format validation (email)
 User.validateFormat('email', { qualifier: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email format' });
 
-// Numericality validation
-User.validateNumericality('age', { greater_than: 18 });
+// Numericality validation (must be at least 18)
+// Note: less_than: X means "value must be >= X" (error if value < X)
+User.validateNumericality('age', { less_than: 18 });
 
 // Acceptance validation (for terms of service)
 User.validateAcceptance('terms', { qualifier: true });
@@ -252,7 +253,6 @@ console.log('Post valid:', isValid); // false - user is invalid
 
 ```javascript
 var User = ActiveModel('user', [
-  { name: 'id', type: 'number' },
   { name: 'name', type: 'string' },
   { name: 'email', type: 'string' },
   { name: 'age', type: 'number' }
@@ -261,12 +261,8 @@ var User = ActiveModel('user', [
 // Reflect on model structure
 var fields = User.reflect();
 console.log('Model fields:', fields);
-// [
-//   { name: 'id', type: 'number' },
-//   { name: 'name', type: 'string' },
-//   { name: 'email', type: 'string' },
-//   { name: 'age', type: 'number' }
-// ]
+// Note: Models automatically include 'id' and '_destroy' fields
+// So this will return 5 fields total: name, email, age, id, _destroy
 
 // Instance reflection
 var user = User.instance();
@@ -456,7 +452,7 @@ if (!user.valid()) {
 | `validateAcceptance` | Validates boolean acceptance (e.g., terms) | `qualifier` |
 | `validateConfirmation` | Validates field matches confirmation field | - |
 | `validateLength` | Validates string length | `minimum`, `maximum`, `is` |
-| `validateNumericality` | Validates numeric values | `greater_than`, `less_than`, `equal_to` |
+| `validateNumericality` | Validates numeric values | `greater_than` (max value), `less_than` (min value), `equal_to` |
 | `validateFormat` | Validates against regex pattern | `qualifier` (regex), `message` |
 | `validateInclusion` | Value must be in list | `qualifier` (hash map), `message` |
 | `validateExclusion` | Value must NOT be in list | `qualifier` (hash map), `message` |
